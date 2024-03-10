@@ -5,7 +5,7 @@ import Database from './persistence/database'
 import SpeedLogService from './persistence/speedlog/service'
 
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3030
 
 const database = new Database()
 const speedLogService = new SpeedLogService(database)

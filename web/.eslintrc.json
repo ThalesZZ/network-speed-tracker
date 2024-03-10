@@ -1,0 +1,14 @@
+{
+	"extends": ["@rocketseat/eslint-config/node"],
+	"plugins": ["@typescript-eslint"],
+	"rules": {
+		"prettier/prettier": "warn",
+		"camelcase": "off",
+		"lines-between-class-members": "warn",
+		"prefer-promise-reject-errors": "warn",
+		"@typescript-eslint/explicit-function-return-type": [
+			"warn",
+			{ "allowExpressions": true } 
+		]
+	}
+}
