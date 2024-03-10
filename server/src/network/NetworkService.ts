@@ -46,7 +46,7 @@ export default class NetworkService {
       this.network.checkDownloadSpeed(options.url, options.fileSizeBytes),
     )
     const result = await this.speedLogService.add(event)
-    console.log(result)
+    // console.log(result)
   }
 
   private trackUploadSpeed = async (): Promise<void> => {
@@ -66,7 +66,7 @@ export default class NetworkService {
       ),
     )
     const result = await this.speedLogService.add(event)
-    console.log(result)
+    // console.log(result)
   }
 
   async start(resetCollection?: boolean): Promise<void> {
@@ -75,7 +75,20 @@ export default class NetworkService {
       console.log('Reseted collection!')
     }
 
-    setInterval(this.trackDownloadSpeed, this.downloadOptions.frequency)
-    setInterval(this.trackUploadSpeed, this.uploadOptions.frequency)
+    setInterval(() => {
+      try {
+        this.trackDownloadSpeed()
+      } catch (e) {
+        console.error(e)
+      }
+    }, this.downloadOptions.frequency)
+
+    // setInterval(() => {
+    //   try {
+    //     this.trackUploadSpeed()
+    //   } catch (e) {
+    //     console.error(e)
+    //   }
+    // }, this.uploadOptions.frequency)
   }
 }

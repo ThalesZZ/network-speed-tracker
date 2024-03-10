@@ -29,8 +29,11 @@ const networkService = new NetworkService(
 )
 
 speedLogService.data().then((data) => {
-  console.log(`Collection currently contains ${data.length} events`)
-  networkService.start()
+  console.log(`Collection currently contains ${data.length} events.`)
+
+  networkService.start().then(() => {
+    console.log('Network Speed Tracker started.')
+  })
 })
 
 app.get('/', (req, res) => {
