@@ -14,9 +14,18 @@ const network = new NetworkSpeedCheck()
 const networkService = new NetworkService(
   network,
   speedLogService,
-  'https://www.google.com/',
-  1e6, // 1 MB
-  1e3, // 1 sec
+  {
+    url: 'https://www.google.com/',
+    fileSizeBytes: 1e6,
+    uom: 'bps',
+    frequency: 1e3,
+  },
+  {
+    url: 'www.google.com',
+    fileSizeBytes: 1e6,
+    uom: 'bps',
+    frequency: 1e3,
+  },
 )
 
 speedLogService.data().then((data) => {

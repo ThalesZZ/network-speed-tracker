@@ -2,43 +2,69 @@ import NetworkSpeedCheck from 'network-speed'
 import { SpeedLogEventProps } from '../models/SpeedLogEvent'
 import SpeedLogService from '../persistence/speedlog/service'
 
+export type NetworkRequestOptions = {
+  url: string
+  fileSizeBytes: number
+  uom: SpeedLogEventProps['uom']
+  frequency: number
+}
+
 export default class NetworkService {
-  readonly network: NetworkSpeedCheck
-  readonly speedLogService: SpeedLogService
-  readonly url: string
-  readonly fileSizeBytes: number
-  readonly frequency: number
+  private readonly network: NetworkSpeedCheck
+  private readonly speedLogService: SpeedLogService
+  readonly downloadOptions: NetworkRequestOptions
+  readonly uploadOptions: NetworkRequestOptions
 
   constructor(
     network: NetworkSpeedCheck,
     speedLogService: SpeedLogService,
-    url: string,
-    fileSizeBytes: number,
-    frequency: number,
+    downloadOptions: NetworkRequestOptions,
+    uploadOptions: NetworkRequestOptions,
   ) {
     this.network = network
     this.speedLogService = speedLogService
-    this.url = url
-    this.fileSizeBytes = fileSizeBytes
-    this.frequency = frequency
+    this.downloadOptions = downloadOptions
+    this.uploadOptions = uploadOptions
+  }
+
+  private async speedLogEventFactory(
+    type: SpeedLogEventProps['type'],
+    { fileSizeBytes: file_size_bytes, ...options }: NetworkRequestOptions,
+    measures: ReturnType<NetworkSpeedCheck['checkDownloadSpeed']>,
+  ): Promise<SpeedLogEventProps> {
+    const { url, uom } = options
+    const value = +(await measures)[uom]
+    const timestamp = new Date().getTime()
+    return { type, value, uom, url, file_size_bytes, timestamp }
   }
 
   private trackDownloadSpeed = async (): Promise<void> => {
-    const speed = await this.network.checkDownloadSpeed(
-      this.url,
-      this.fileSizeBytes,
+    const options = this.downloadOptions
+    const event = await this.speedLogEventFactory(
+      'download',
+      options,
+      this.network.checkDownloadSpeed(options.url, options.fileSizeBytes),
     )
-    const uom = 'bps'
-    const value = +speed[uom]
-    const event: SpeedLogEventProps = {
-      value,
-      uom,
-      url: this.url,
-      file_size_bytes: this.fileSizeBytes,
-      type: 'download',
-      timestamp: new Date().getTime(),
-    }
+    const result = await this.speedLogService.add(event)
+    console.log(result)
+  }
 
+  private trackUploadSpeed = async (): Promise<void> => {
+    const options = this.uploadOptions
+    const event = await this.speedLogEventFactory(
+      'upload',
+      options,
+      this.network.checkUploadSpeed(
+        {
+          hostname: options.url,
+          port: 80,
+          path: '/catchers/544b09b4599c1d0200000289',
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        },
+        options.fileSizeBytes,
+      ),
+    )
     const result = await this.speedLogService.add(event)
     console.log(result)
   }
@@ -49,6 +75,7 @@ export default class NetworkService {
       console.log('Reseted collection!')
     }
 
-    setInterval(this.trackDownloadSpeed, this.frequency)
+    setInterval(this.trackDownloadSpeed, this.downloadOptions.frequency)
+    setInterval(this.trackUploadSpeed, this.uploadOptions.frequency)
   }
 }
