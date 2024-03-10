@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb'
-import { SpeedLogEvent, SpeedLogEventProps } from '../../models/SpeedLogEvent'
+import { SpeedLogEvent, SpeedLogEventProps } from '../../../../models/SpeedLogEvent'
 import Database from '../database'
 
 export default class SpeedLogService {

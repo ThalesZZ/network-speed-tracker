@@ -1,6 +1,6 @@
 import { ObjectId, WithId } from 'mongodb'
 
-export type SpeedLogEventProps = {
+export interface SpeedLogEventProps {
   _id?: ObjectId
   url: string
   file_size_bytes: number
