@@ -75,13 +75,13 @@ export default class NetworkService {
       console.log('Reseted collection!')
     }
 
-    setInterval(() => {
-      try {
-        this.trackDownloadSpeed()
-      } catch (e) {
-        console.error(e)
-      }
-    }, this.downloadOptions.frequency)
+    // setInterval(() => {
+    //   try {
+    //     this.trackDownloadSpeed()
+    //   } catch (e) {
+    //     console.error(e)
+    //   }
+    // }, this.downloadOptions.frequency)
 
     // setInterval(() => {
     //   try {
