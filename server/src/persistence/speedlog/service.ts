@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb'
-import { SpeedLogEvent } from '../../models/SpeedLogEvent'
+import { SpeedLogEvent, SpeedLogEventProps } from '../../models/SpeedLogEvent'
 import Database from '../database'
 
 export default class SpeedLogService {
@@ -14,7 +14,7 @@ export default class SpeedLogService {
     return this.database.collection(SpeedLogService.COLLECTION)
   }
 
-  async add(evt: Omit<SpeedLogEvent, '_id'>): Promise<SpeedLogEvent> {
+  async add(evt: SpeedLogEventProps): Promise<SpeedLogEvent> {
     const timestampedEvent: SpeedLogEvent = { ...evt, _id: undefined }
     // TODO validate with zod
 

@@ -1,11 +1,13 @@
-import { ObjectId } from 'mongodb'
+import { ObjectId, WithId } from 'mongodb'
 
-export type SpeedLogEvent = {
+export type SpeedLogEventProps = {
   _id?: ObjectId
   url: string
   file_size_bytes: number
-  type: 'download' | 'upload'
   timestamp: number
   value: number
   uom: 'bps' | 'kbps' | 'mbps'
+  type: 'download' | 'upload'
 }
+
+export type SpeedLogEvent = WithId<SpeedLogEventProps>

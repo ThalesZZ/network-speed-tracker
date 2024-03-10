@@ -1,5 +1,5 @@
 import NetworkSpeedCheck from 'network-speed'
-import { SpeedLogEvent } from '../models/SpeedLogEvent'
+import { SpeedLogEventProps } from '../models/SpeedLogEvent'
 import SpeedLogService from '../persistence/speedlog/service'
 
 export default class NetworkService {
@@ -30,7 +30,7 @@ export default class NetworkService {
     )
     const uom = 'bps'
     const value = +speed[uom]
-    const event: Omit<SpeedLogEvent, '_id'> = {
+    const event: SpeedLogEventProps = {
       value,
       uom,
       url: this.url,
