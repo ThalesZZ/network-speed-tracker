@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb'
-import { SpeedLogEvent, SpeedLogEventProps } from '../../../../models/SpeedLogEvent'
 import Database from '../database'
+import { SpeedLogEvent, SpeedLogEventProps } from '../../models/SpeedLogEvent'
 
 export default class SpeedLogService {
   private static readonly COLLECTION = 'speed_logs'

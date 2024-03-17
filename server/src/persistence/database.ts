@@ -1,5 +1,5 @@
 import { Collection, Db, MongoClient } from 'mongodb'
-import { SpeedLogEvent } from '../../../models/SpeedLogEvent'
+import { SpeedLogEvent } from '../models/SpeedLogEvent'
 
 export default class Database {
   private readonly URI = 'mongodb://localhost:27017'

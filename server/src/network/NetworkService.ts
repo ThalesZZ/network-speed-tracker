@@ -1,6 +1,6 @@
 import NetworkSpeedCheck from 'network-speed'
-import { SpeedLogEventProps } from '../../../models/SpeedLogEvent'
 import SpeedLogService from '../persistence/speedlog/service'
+import { SpeedLogEventProps } from '../models/SpeedLogEvent'
 
 export type NetworkRequestOptions = {
   url: string
