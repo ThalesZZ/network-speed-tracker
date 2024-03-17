@@ -1,12 +1,12 @@
-import express from 'express'
+import fastify from 'fastify'
+import cors from '@fastify/cors'
 import NetworkSpeedCheck from 'network-speed'
 import NetworkService from './network/NetworkService'
 import Database from './persistence/database'
 import SpeedLogService from './persistence/speedlog/service'
 import SpeedLogController from './persistence/speedlog/controller'
 
-const app = express()
-const port = process.env.PORT || 3030
+const port = 3030
 
 const database = new Database()
 const speedLogService = new SpeedLogService(database)
@@ -32,18 +32,19 @@ const networkService = new NetworkService(
 
 speedLogService.data().then((data) => {
   console.log(`Collection currently contains ${data.length} events.`)
-
-  networkService.start().then(() => {
-    console.log('Network Speed Tracker started.')
-  })
+  networkService
+    .start()
+    .then(() => console.log('Network Speed Tracker started.'))
 })
 
-speedLogController.register(app)
+const app = fastify()
+app.register(cors, { origin: true })
+app.register(speedLogController.routes)
 
 app.get('/', (req, res) => {
   res.send('Running on port ' + port)
 })
 
-app.listen(port, () => {
+app.listen({ port }).then(() => {
   console.log('Listening to port ' + port)
 })

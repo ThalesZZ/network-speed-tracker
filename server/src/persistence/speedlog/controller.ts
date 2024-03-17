@@ -1,6 +1,6 @@
 import { SpeedLogEvent } from '../../models/SpeedLogEvent'
 import SpeedLogService from './service'
-import { Express, Request, Response } from 'express'
+import { FastifyInstance } from 'fastify'
 
 export default class SpeedLogController {
   private readonly PATH = 'speedlog'
@@ -12,15 +12,11 @@ export default class SpeedLogController {
 
   private path = (route: string): string => '/' + [this.PATH, route].join('/')
 
-  register(app: Express): void {
-    app.get(this.path('data'), this.data)
-  }
-
-  data = async (
-    req: Request,
-    res: Response<SpeedLogEvent[]>,
-  ): Promise<void> => {
-    const data = await this.service.data()
-    res.send(data)
+  routes = async (app: FastifyInstance): Promise<void> => {
+    app.get(this.path('data'), async (request) => {
+      console.log('endpoint')
+      const data = await this.service.data()
+      return data
+    })
   }
 }
